@@ -4,14 +4,19 @@ import (
 	"testing"
 )
 
-// FullName A structure to store a full name
-type FullName struct {
-	FirstName string
-	LastName  string
+// GetSampleData Returns a sample list of FullNames
+func GetSampleData() []FullName {
+	samples := []FullName{
+		FullName{"Danish", "Mujeeb"},
+		FullName{"Mikael", "Danish"},
+		FullName{"Hello", "World"},
+	}
+
+	return samples
 }
 
 // GetSampleData Returns a sample list of FullNames
-func GetSampleData() []*FullName {
+func GetSampleDataP() []*FullName {
 	samples := []*FullName{
 		&FullName{"Danish", "Mujeeb"},
 		&FullName{"Mikael", "Danish"},
@@ -21,46 +26,72 @@ func GetSampleData() []*FullName {
 	return samples
 }
 
-func Convensional(data []*FullName) *FullName {
-	if len(data) > 0 {
-		return data[0]
-	}
-	return nil
-}
+// Testing functions
 
-func Classy(data []*FullName) *FullName {
-	for _, fn := range data {
-		return fn
-	}
-	return nil
-}
-
-func TestConvensional(t *testing.T) {
+func TestGetFirstTraditional(t *testing.T) {
 	samples := GetSampleData()
-	fn := Convensional(samples)
+	fn, err := GetFirstTraditional(samples)
+	if err != nil {
+		t.Error("Error retrieving first element")
+	}
 	if fn.FirstName != "Danish" {
 		t.Error("Expected first name to be 'Danish'", fn.FirstName)
 	}
 }
 
-func TestClassy(t *testing.T) {
+func TestGetFirstRangeLoop(t *testing.T) {
 	samples := GetSampleData()
-	fn := Classy(samples)
+	fn, err := GetFirstRangeLoop(samples)
+	if err != nil {
+		t.Error("Error retrieving first element")
+	}
 	if fn.FirstName != "Danish" {
 		t.Error("Expected first name to be 'Danish'", fn.FirstName)
 	}
 }
 
-func BenchmarkConvensional(b *testing.B) {
+// Benchmarking functions
+
+func BenchmarkGetFirstTraditional(b *testing.B) {
 	samples := GetSampleData()
 	for i := 0; i < b.N; i++ {
-		Convensional(samples)
+		GetFirstTraditional(samples)
 	}
 }
 
-func BenchmarkClassy(b *testing.B) {
+func BenchmarkGetFirstRangeLoop(b *testing.B) {
 	samples := GetSampleData()
 	for i := 0; i < b.N; i++ {
-		Classy(samples)
+		GetFirstRangeLoop(samples)
+	}
+}
+
+func BenchmarkGetFirstTraditionalLoop(b *testing.B) {
+	samples := GetSampleData()
+	for i := 0; i < b.N; i++ {
+		GetFirstTraditional(samples)
+	}
+}
+
+// Benchmarking functions: Pointer based
+
+func BenchmarkGetFirstTraditionalP(b *testing.B) {
+	samples := GetSampleDataP()
+	for i := 0; i < b.N; i++ {
+		GetFirstTraditionalP(samples)
+	}
+}
+
+func BenchmarkGetFirstRangeLoopP(b *testing.B) {
+	samples := GetSampleDataP()
+	for i := 0; i < b.N; i++ {
+		GetFirstRangeLoopP(samples)
+	}
+}
+
+func BenchmarkGetFirstTraditionalLoopP(b *testing.B) {
+	samples := GetSampleDataP()
+	for i := 0; i < b.N; i++ {
+		GetFirstTraditionalP(samples)
 	}
 }
